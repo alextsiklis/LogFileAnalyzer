@@ -1,7 +1,11 @@
 import re
 import datetime
+import time
+import matplotlib
 import numpy as np, matplotlib.pyplot as plt, pandas as pd
 from collections import defaultdict
+
+from matplotlib.ticker import MultipleLocator
 
 MAX_REQUESTS_PER_MINUTE = 5
 MAX_SECONDS_TO_CHANGE_USER_AGENT = 10
@@ -58,10 +62,14 @@ def readLog(logStr, logList):
 
 # function of reading the line
 def readFile(filename):
+    lines = 0
     logList = defaultdict(list)
     with open(filename) as file:
         for line in file:
             readLog(line, logList)
+            lines += 1
+            # print(lines)
+    print(lines)
     analyzeData(logList)
 
 
@@ -121,15 +129,23 @@ def analyzeData(logList):
         if error > MAX_ERROR_COUNT:
             blackListByErrors.append(ip)
 
-    # df['age' > 50].plot.hist(column='age', bins=10)
+    # fig, ax = plt.subplots(figsize=(5, 2.7), layout='constrained')
+    # ax.plot(df.Date, df.Size)
+    # ax.set_xlabel('Время', fontsize=8)
+    # ax.set_ylabel('Размер', fontsize=8)
+    # ax.set_title("Размер полезной нагрузки")
+    # plt.gcf().autofmt_xdate()
+    # y_major_locator = MultipleLocator(1000)
+    # ax = plt.gca()
+    # ax.yaxis.set_major_locator(y_major_locator)
+    # # plt.yticks([30000, 500000, 1000000, 1500000])
     # plt.show()
-    # print(df['Ip'].value_counts())
 
-    print(len(ips))
-    print(len(blackListByRPT))
-    print(len(blackListByUA))
-    print(len(blackListByPOST))
-    print(len(blackListByErrors))
+    # print(len(ips))
+    # print(len(blackListByRPT))
+    # print(len(blackListByUA))
+    # print(len(blackListByPOST))
+    # print(len(blackListByErrors))
 
     # print(blackListByRPT)
     # print(blackListByUA)
@@ -138,4 +154,64 @@ def analyzeData(logList):
 
 
 if __name__ == '__main__':
+    start_time = time.time()
     readFile("access.log")
+    print("--- %s seconds ---" % (time.time() - start_time))
+
+    # start_time = time.time()
+    # readFile("log1.log")
+    # print("--- %s seconds ---" % (time.time() - start_time))
+    # y1 = time.time() - start_time
+    # 
+    # start_time = time.time()
+    # readFile("log2.log")
+    # print("--- %s seconds ---" % (time.time() - start_time))
+    # y2 = time.time() - start_time
+    # 
+    # start_time = time.time()
+    # readFile("log3.log")
+    # print("--- %s seconds ---" % (time.time() - start_time))
+    # y3 = time.time() - start_time
+    # 
+    # start_time = time.time()
+    # readFile("log4.log")
+    # print("--- %s seconds ---" % (time.time() - start_time))
+    # y4 = time.time() - start_time
+    # 
+    # start_time = time.time()
+    # readFile("access.log")
+    # print("--- %s seconds ---" % (time.time() - start_time))
+    # y5 = time.time() - start_time
+    # 
+    # start_time = time.time()
+    # readFile("log5.log")
+    # print("--- %s seconds ---" % (time.time() - start_time))
+    # y6 = time.time() - start_time
+    # 
+    # start_time = time.time()
+    # readFile("log6.log")
+    # print("--- %s seconds ---" % (time.time() - start_time))
+    # y7 = time.time() - start_time
+    # 
+    # x = [1000, 12000, 28000, 50000, 78000, 100000, 300000]
+    # y = [y1, y2, y3, y4, y5, y6, y7]
+    # fig, ax = plt.subplots(figsize=(5, 2.7), layout='constrained')
+    # ax.plot(x, y)  # Plot some data on the axes.
+    # ax.set_xlabel('Количество строк в журнале', fontsize=8)  # Add an x-label to the axes.
+    # ax.set_ylabel('Время', fontsize=8)  # Add a y-label to the axes.
+    # ax.set_title("Время анализа")  # Add a title to the axes.
+    # ax = plt.gca()
+    # plt.show()
+    
+    x = ['1', '2', '3', '4', '5']
+    y1 = [1739, 168, 70, 5, 68]
+    y2 = [1739, 168, 76, 4, 65]
+    colors = ['#E69F00', '#56B4E9']
+    names = ['United Air Lines Inc.', 'JetBlue Airways']
+    plt.hist([y1,y2], x, label=['y1', 'y2'])
+    # Plot formatting
+    plt.legend()
+    plt.xlabel('Delay (min)')
+    plt.ylabel('Normalized Flights')
+    plt.title('Side-by-Side Histogram with Multiple Airlines')
+    plt.show()
